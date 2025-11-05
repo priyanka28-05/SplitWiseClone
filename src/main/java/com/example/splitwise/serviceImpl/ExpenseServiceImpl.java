@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -78,7 +79,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 
         // Split the expense equally among participants
         double splitAmount = request.getTotalAmount() / participants.size();
-
+        List<ExpenseShareEntity> shareEntitiyList = new ArrayList<>();
         for (UserEntity participant : participants) {
             ExpenseShareEntity share = ExpenseShareEntity.builder()
                     .expense(savedExpense)
@@ -87,6 +88,8 @@ public class ExpenseServiceImpl implements ExpenseService {
                     .settled(false)
                     .build();
             expenseShareRepository.save(share);
+            shareEntitiyList.add(share);
+            savedExpense.setExpenseShares(shareEntitiyList);
         }
 
         return buildExpenseResponse(savedExpense, participants, "Expense added successfully");
@@ -121,14 +124,18 @@ public class ExpenseServiceImpl implements ExpenseService {
                         "User '" + userName + "' not found"));
 
         return expenseShareRepository.findByUserWithExpenseAndShares(user).stream()
-                .map(share -> buildExpenseResponse(
-                        share.getExpense(),
-                        share.getExpense().getExpenseShares().stream()
+                .map(ExpenseShareEntity::getExpense)
+                .distinct()
+                .map(expense -> buildExpenseResponse(
+                        expense,
+                        expense.getExpenseShares().stream()
                                 .map(ExpenseShareEntity::getUser)
                                 .collect(Collectors.toSet()),
-                        "Expense retrieved successfully"))
+                        "Expense retrieved successfully"
+                ))
                 .collect(Collectors.toList());
     }
+
 
     /**
      * Utility method to map ExpenseEntity to ExpenseResponseModel.
@@ -136,16 +143,24 @@ public class ExpenseServiceImpl implements ExpenseService {
     private ExpenseResponseModel buildExpenseResponse(ExpenseEntity expense,
                                                       Set<UserEntity> participants,
                                                       String message) {
+        // Find the share amount for the current user
+        double shareAmount = expense.getExpenseShares().stream()
+                .map(ExpenseShareEntity::getShareAmount)
+                .findFirst()
+                .orElse(0.0);
+
         return ExpenseResponseModel.builder()
                 .expenseId(null) // internal ID hidden
                 .groupName(expense.getGroup().getGroupName())
                 .createdByUser(expense.getCreatedBy().getUserName())
                 .description(expense.getDescription())
                 .totalAmount(expense.getTotalAmount())
+                .shareAmount(shareAmount) // set current user's share
                 .participants(participants.stream()
                         .map(UserEntity::getUserName)
                         .collect(Collectors.toList()))
                 .message(message)
                 .build();
     }
+
 }

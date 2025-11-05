@@ -20,4 +20,5 @@ public class ExpenseResponseModel {
     private String createdByUser;
     private List<String> participants;
     private String message;
+    private double shareAmount;
 }
