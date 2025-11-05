@@ -1,0 +1,53 @@
+{
+  "info": {
+    "name": "Splitwise API",
+    "_postman_id": "splitwise-collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Create Group",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Friends Dinner\",\n  \"memberIds\": [1,2,3,4]\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/groups",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["groups"]
+        }
+      }
+    },
+    {
+      "name": "Add Expense",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"createdBy\": 1,\n  \"groupId\": 1,\n  \"amount\": 100.00,\n  \"description\": \"Dinner\",\n  \"splitWithUserIds\": [1,2,3,4]\n}"
+        },
+        "url": { "raw": "http://localhost:8080/expenses", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["expenses"] }
+      }
+    },
+    {
+      "name": "Settle Payment",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"payerId\": 2,\n  \"receiverId\": 1,\n  \"groupId\": 1,\n  \"amount\": 25.00,\n  \"expenseId\": 1\n}"
+        },
+        "url": { "raw": "http://localhost:8080/settlements", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["settlements"] }
+      }
+    }
+  ]
+}
