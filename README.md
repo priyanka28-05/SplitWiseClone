@@ -1,6 +1,6 @@
 # 💸 DhanSplit Clone - Expense Sharing Application
 
-A **Spring Boot 3** backend project that replicates core Splitwise functionality — allowing users to manage shared expenses, create groups, track balances, and settle payments.
+A **Spring Boot 3** backend project that replicates core DhanSplit functionality — allowing users to manage shared expenses, create groups, track balances, and settle payments.
 
 ---
 
@@ -194,4 +194,4 @@ This project is open source under the [MIT License](LICENSE).
 ---
 
 **Developed by:** Priyanka Mansuriya  
-💬 *SplitWise Clone using Spring Boot, OAuth2, and H2 Database.*
+💬 *DhanSplit using Spring Boot, OAuth2, and H2 Database.*
