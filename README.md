@@ -1,4 +1,4 @@
-# 💸 SplitWise Clone - Expense Sharing Application
+# 💸 DhanSplit Clone - Expense Sharing Application
 
 A **Spring Boot 3** backend project that replicates core Splitwise functionality — allowing users to manage shared expenses, create groups, track balances, and settle payments.
 
